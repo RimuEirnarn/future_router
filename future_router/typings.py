@@ -2,7 +2,6 @@
 
 from typing import Any, Callable, NamedTuple, Type
 
-from flask import Flask
 from .resource_dummy import ResourceDummy
 
 ResourceT = Type[ResourceDummy]
@@ -10,7 +9,6 @@ Function = Callable[..., Any]
 Args = tuple[Any, ...]
 Kwargs = dict[str, Any]
 ResOrFunc = ResourceT | Function
-BootstrapFunction = Callable[[Flask], None]
 # ResourceRoute = tuple[ResourceT, Args, Kwargs]
 # Routes = tuple[str, str, Function, Args, Kwargs]
 
