@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "future_router"
+description = "A wrapper for Flask app (or blueprint) that can be initialised later."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dynamic = ["version"]
+
+[tool.setuptools]
+zip-safe = true
+packages = ["future_router"]
