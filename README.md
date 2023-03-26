@@ -20,7 +20,7 @@ route.init_app(app)
 
 It can also use Blueprint. Like above, just with this different
 
-```
+```python
 from flask import Flask, Blueprint
 from future_router import Router
 
