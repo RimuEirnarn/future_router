@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ._utils import AttrDict
+from .utils import AttrDict
 
 _null = object()
 
