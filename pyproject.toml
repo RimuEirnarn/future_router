@@ -12,6 +12,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dynamic = ["version"]
+depedencies = [
+    "flask"
+]
 
 [tool.setuptools]
 zip-safe = true
