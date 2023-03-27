@@ -20,6 +20,7 @@ class FrozenDict(dict):
             return super().__setattr__(__name, __value)
         return None
 
+
 class AttrDict(dict):
     """Attribute Dictionary"""
 

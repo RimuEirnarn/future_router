@@ -17,8 +17,11 @@ class ResourceDummy(Protocol):
     def edit(self):
         """Show user edit form response."""
 
-    def update(self):
+    def update(self, id):
         """Update user request"""
 
-    def delete(self):
+    def destroy(self, id):
         """Delete user request"""
+
+    def show(self, id):
+        """Return"""

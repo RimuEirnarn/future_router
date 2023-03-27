@@ -7,9 +7,16 @@ from .errors import NotResourcceClass, BlueprintError
 from .typings import DefaultRoute, Function, ResourceRoute, ResourceT, Routes
 from .utils import FrozenDict, multiple_hasattr
 
-RESOURCE_METHODS = ('index', 'update', 'store', 'edit', 'create', 'update')
+RESOURCE_METHODS = ('index', 'show', 'store', 'edit',
+                    'create', 'update', 'destroy')
 RESOURCE_MAP = FrozenDict(
-    zip(RESOURCE_METHODS, ("/", "/", "/", "/<id>/edit", "/create", "/<id>")))
+    zip(RESOURCE_METHODS,
+        zip(
+            ("/", "/<id>", "/", "/<id>/edit", "/create", "/<id>", "/<id>"),
+            ("GET", "GET", "POST", "GET", "GET", "PATCH", 'DELETE')
+        )
+        )
+)
 
 
 class Router:
@@ -101,10 +108,11 @@ class Router:
             raise ValueError(
                 "This must not be happening. This line must never be reached!")
         res_class = item.resource_class
-        for key, value in RESOURCE_MAP.items():
-            endpoint = f"{res_class.__name__}.{key}"
-            rule = f"{item.rule}{value}"
-            self._add_url_rule(rule, endpoint, getattr(res_class, key))
+        for view, (end, method) in RESOURCE_MAP.items():
+            endpoint = f"{res_class.__name__}.{view}"
+            rule = f"{item.rule}{end}"
+            self._add_url_rule(rule, endpoint, getattr(
+                res_class, view), methods=[method])
 
     def _put_pending_or_push(self, item: Routes | ResourceRoute):
         if self.pushable() is False:
@@ -167,7 +175,7 @@ class Router:
         """Provide resource route.
         To make resource route, a class with these methods must exists"""
         def wrapper(class_: ResourceT):
-            if not multiple_hasattr(class_, RESOURCE_METHODS):
+            if multiple_hasattr(class_, RESOURCE_METHODS) is False:
                 raise NotResourcceClass(
                     f"class {class_.__name__} Does not have all required functions.")
             self._pending_resources.append(
