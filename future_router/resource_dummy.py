@@ -18,7 +18,7 @@ class ResourceDummy(Protocol):
         """Store user request"""
 
     @staticmethod
-    def edit():
+    def edit(id):
         """Show user edit form response."""
 
     @staticmethod
