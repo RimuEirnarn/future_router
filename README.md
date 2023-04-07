@@ -47,25 +47,32 @@ app = Flask(__name__)
 class TestResource(ResourceDummy):
     """Test Resource"""
 
-    def index(self):
+    @staticmethod
+    def index():
         return "Index"
 
-    def update(self, id):
+    @staticmethod
+    def update(id):
         return "Update"
 
-    def destroy(self, id):
+    @staticmethod
+    def destroy(id):
         return "Destroy"
 
-    def store(self):
+    @staticmethod
+    def store():
         return "Store"
 
-    def show(self, id):
+    @staticmethod
+    def show(id):
         return "Show"
 
-    def create(self):
+    @staticmethod
+    def create():
         return "Create"
 
-    def edit(self):
+    @staticmethod
+    def edit():
         return "Edit"
 
 
