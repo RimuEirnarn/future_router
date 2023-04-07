@@ -5,23 +5,30 @@ from typing import Protocol
 class ResourceDummy(Protocol):
     """Resource Dummy"""
 
-    def index(self):
+    @staticmethod
+    def index():
         """Index all the resource available."""
 
-    def create(self):
+    @staticmethod
+    def create():
         """Show the user/form response"""
 
-    def store(self):
+    @staticmethod
+    def store():
         """Store user request"""
 
-    def edit(self):
+    @staticmethod
+    def edit():
         """Show user edit form response."""
 
-    def update(self, id):
+    @staticmethod
+    def update(id):
         """Update user request"""
 
-    def destroy(self, id):
+    @staticmethod
+    def destroy(id):
         """Delete user request"""
 
-    def show(self, id):
+    @staticmethod
+    def show(id):
         """Return"""
