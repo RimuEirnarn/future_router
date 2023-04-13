@@ -1,6 +1,6 @@
 """Resource Dummy"""
 from typing import Protocol
-from . import notimplemented
+from .funcs import notimplemented
 
 
 class ResourceDummy(Protocol):
