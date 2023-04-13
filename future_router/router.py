@@ -111,8 +111,11 @@ class Router:
         for view, (end, method) in RESOURCE_MAP.items():
             endpoint = f"{res_class.__name__}.{view}"
             rule = f"{item.rule}{end}"
-            self._add_url_rule(rule, endpoint, getattr(
-                res_class, view), methods=[method])
+            func = getattr(res_class, view)
+            is_notimplemented: bool = getattr(func, '_notimplemented', False)
+            if not is_notimplemented:
+                continue
+            self._add_url_rule(rule, endpoint, func, methods=[method])
 
     def _put_pending_or_push(self, item: Routes | ResourceRoute):
         if self.pushable() is False:
