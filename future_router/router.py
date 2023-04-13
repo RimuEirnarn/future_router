@@ -109,7 +109,10 @@ class Router:
                 "This must not be happening. This line must never be reached!")
         res_class = item.resource_class
         for view, (end, method) in RESOURCE_MAP.items():
-            endpoint = f"{res_class.__name__}.{view}"
+            if not self._blueprint:
+                endpoint = f"{res_class.__name__}.{view}"
+            else:
+                endpoint = f"{res_class.__name__}__{view}"
             rule = f"{item.rule}{end}"
             func = getattr(res_class, view)
             is_notimplemented: bool = getattr(func, '_notimplemented', False)
