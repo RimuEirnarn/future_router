@@ -90,7 +90,7 @@ class Router:
         if self._blueprint_was_pushed:
             raise BlueprintError(
                 "New route cannot be registered anymore. Blueprint was pushed.")
-        return self.get_app()._add_url_rule(rule, endpoint, func, **options)
+        return self._get_app()._add_url_rule(rule, endpoint, func, **options)
 
     def _push_to_app_fn(self, item: Routes):
         if self.pushable() is False:
