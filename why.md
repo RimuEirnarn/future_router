@@ -6,4 +6,4 @@ In long answer, i was found myself in a special condition where specific module 
 multiple files and directories. Code were co-dependant to each other because of inability of future-purpose.
 I made this specifically to not enclose the app-creation within simple function.
 
-All it takes is only `Router()`
+All it takes is only `Router()` and expand it further to your liking. Final phase is `.init_app(app)` to finish the work-around.
