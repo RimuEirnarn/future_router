@@ -23,20 +23,20 @@ class ResourceDummy(Protocol):
 
     @notimplemented
     @staticmethod
-    def edit(id):
+    def edit(res_id):
         """Show user edit form response."""
 
     @notimplemented
     @staticmethod
-    def update(id):
+    def update(res_id):
         """Update user request"""
 
     @notimplemented
     @staticmethod
-    def destroy(id):
+    def destroy(res_id):
         """Delete user request"""
 
     @notimplemented
     @staticmethod
-    def show(id):
-        """Return"""
+    def show(res_id):
+        """Return resource from id"""

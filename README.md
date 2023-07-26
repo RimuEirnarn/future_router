@@ -52,11 +52,11 @@ class TestResource(ResourceDummy):
         return "Index"
 
     @staticmethod
-    def update(id):
+    def update(res_id):
         return "Update"
 
     @staticmethod
-    def destroy(id):
+    def destroy(res_id):
         return "Destroy"
 
     @staticmethod
@@ -64,7 +64,7 @@ class TestResource(ResourceDummy):
         return "Store"
 
     @staticmethod
-    def show(id):
+    def show(res_id):
         return "Show"
 
     @staticmethod

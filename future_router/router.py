@@ -14,7 +14,7 @@ RESOURCE_METHODS = ('index', 'show', 'store', 'edit',
 RESOURCE_MAP = FrozenDict(
     zip(RESOURCE_METHODS,
         zip(
-            ("/", "/<id>", "/", "/<id>/edit", "/create", "/<id>", "/<id>"),
+            ("/", "/<res_id>", "/", "/<res_id>/edit", "/create", "/<res_id>", "/<res_id>"),
             ("GET", "GET", "POST", "GET", "GET", "PATCH", 'DELETE')
         )
         )
