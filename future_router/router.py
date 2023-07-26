@@ -7,6 +7,8 @@ from .errors import NotResourcceClass, BlueprintError
 from .typings import DefaultRoute, Function, ResourceRoute, ResourceT, Routes
 from .utils import FrozenDict, multiple_hasattr
 
+ROUTER = 'Flask | Blueprint | Router'
+
 RESOURCE_METHODS = ('index', 'show', 'store', 'edit',
                     'create', 'update', 'destroy')
 RESOURCE_MAP = FrozenDict(
@@ -17,6 +19,40 @@ RESOURCE_MAP = FrozenDict(
         )
         )
 )
+
+def push_to_app_fn(self: ROUTER, item: Routes):
+    """Push function to app"""
+    # pylint: disable-next=protected-access
+    add_url_rule = self._add_url_rule if isinstance(self, Router) else self.add_url_rule
+    endpoint = item.kwargs.pop("endpoint", None)
+    method: list[str] = item.kwargs.get("methods", [item.method])
+    if item.method not in method:
+        method.append(item.method)
+    item.kwargs['methods'] = method
+    add_url_rule(item.rule, endpoint, item.func, **item.kwargs)
+
+def push_to_app_res(self: ROUTER, item: ResourceRoute):
+    """Push resource class to app"""
+    # pylint: disable-next=protected-access
+    add_url_rule = self._add_url_rule if isinstance(self, Router) else self.add_url_rule
+    is_blueprint = False
+    if isinstance(self, Blueprint):
+        is_blueprint = True
+    if isinstance(self, Router):
+        # pylint: disable-next=protected-access
+        is_blueprint = bool(self._blueprint)
+    res_class = item.resource_class
+    for view, (end, method) in RESOURCE_MAP.items():
+        if not is_blueprint:
+            endpoint = f"{res_class.__name__}.{view}"
+        else:
+            endpoint = f"{res_class.__name__}__{view}"
+        rule = f"{item.rule}{end}"
+        func = getattr(res_class, view)
+        is_notimplemented: bool = getattr(func, '_notimplemented', False)
+        if is_notimplemented:
+            continue
+        add_url_rule(rule, endpoint, func, methods=[method])
 
 
 class Router:
@@ -73,6 +109,19 @@ class Router:
             return self._app
         raise RuntimeError("Cannot return blueprint or app.")
 
+
+    def _push_to_app_fn(self, item: Routes):
+        if self.pushable() is False:
+            raise ValueError(
+                "This must not be happening. This line must never be reached!")
+        push_to_app_fn(self, item)
+
+    def _push_to_app_res(self, item: ResourceRoute):
+        if self.pushable() is False:
+            raise ValueError(
+                "This must not be happening. This line must never be reached!")
+        push_to_app_res(self, item)
+
     def _push_to_app(self, item: DefaultRoute):
         if self.pushable() is False:
             raise ValueError(
@@ -92,33 +141,6 @@ class Router:
                 "New route cannot be registered anymore. Blueprint was pushed.")
         return self.get_app().add_url_rule(rule, endpoint, func, **options)
 
-    def _push_to_app_fn(self, item: Routes):
-        if self.pushable() is False:
-            raise ValueError(
-                "This must not be happening. This line must never be reached!")
-        endpoint = item.kwargs.pop("endpoint", None)
-        method: list[str] = item.kwargs.get("methods", [item.method])
-        if item.method not in method:
-            method.append(item.method)
-        item.kwargs['methods'] = method
-        self._add_url_rule(item.rule, endpoint, item.func, **item.kwargs)
-
-    def _push_to_app_res(self, item: ResourceRoute):
-        if self.pushable() is False:
-            raise ValueError(
-                "This must not be happening. This line must never be reached!")
-        res_class = item.resource_class
-        for view, (end, method) in RESOURCE_MAP.items():
-            if not self._blueprint:
-                endpoint = f"{res_class.__name__}.{view}"
-            else:
-                endpoint = f"{res_class.__name__}__{view}"
-            rule = f"{item.rule}{end}"
-            func = getattr(res_class, view)
-            is_notimplemented: bool = getattr(func, '_notimplemented', False)
-            if not is_notimplemented:
-                continue
-            self._add_url_rule(rule, endpoint, func, methods=[method])
 
     def _put_pending_or_push(self, item: Routes | ResourceRoute):
         if self.pushable() is False:
