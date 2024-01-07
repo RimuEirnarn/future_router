@@ -11,13 +11,14 @@ ROUTER = 'Flask | Blueprint | Router'
 
 RESOURCE_METHODS = ('index', 'show', 'store', 'edit',
                     'create', 'update', 'destroy')
+
 RESOURCE_MAP = FrozenDict(
     zip(RESOURCE_METHODS,
         zip(
             ("/", "/<res_id>", "/", "/<res_id>/edit", "/create", "/<res_id>", "/<res_id>"),
             ("GET", "GET", "POST", "GET", "GET", "PATCH", 'DELETE')
         )
-        )
+    )
 )
 
 def push_to_app_fn(self: ROUTER, item: Routes):
@@ -59,7 +60,7 @@ class Router:
     """Router class"""
 
     def __init__(self, blueprint: Optional[Blueprint] = None) -> None:
-        self._app: Optional[Flask] = None
+        self._app: Flask | Blueprint | None = None
         self._pending_routes: list[Routes] = []
         self._pending_resources: list[ResourceRoute] = []
         self._pending_defaultroute: list[DefaultRoute] = []
@@ -67,7 +68,7 @@ class Router:
         self._blueprint: Optional[Blueprint] = blueprint  # type: ignore
         self._blueprint_was_pushed = False
 
-    def init_app(self, app: Flask):
+    def init_app(self, app: Flask | Blueprint):
         """Initialise app"""
         self._app = app
         for item in self._pending_routes:
