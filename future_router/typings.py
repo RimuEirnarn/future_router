@@ -33,5 +33,6 @@ class ResourceRoute(NamedTuple):
     """Resource Routes"""
     resource_class: ResourceT
     rule: str
+    alias: str
     args: Args
     kwargs: Kwargs

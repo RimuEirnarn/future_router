@@ -4,8 +4,7 @@ from typing import Any
 
 from .utils import AttrDict
 
-_null = object()
-
+#_null = object()
 
 class ProxyAttrDict:
     """Proxy AttrDict"""

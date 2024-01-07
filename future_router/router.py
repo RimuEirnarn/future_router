@@ -6,6 +6,7 @@ from flask import Blueprint, Flask
 from .errors import NotResourcceClass, BlueprintError
 from .typings import DefaultRoute, Function, ResourceRoute, ResourceT, Routes
 from .utils import FrozenDict, multiple_hasattr
+from .funcs import notimplemented
 
 ROUTER = 'Flask | Blueprint | Router'
 
@@ -21,7 +22,11 @@ RESOURCE_MAP = FrozenDict(
     )
 )
 
-def push_to_app_fn(self: ROUTER, item: Routes):
+@notimplemented
+def _dummy_function():
+    pass
+
+def push_to_app_fn(self: ROUTER, item: Routes): # type: ignore
     """Push function to app"""
     # pylint: disable-next=protected-access
     add_url_rule = self._add_url_rule if isinstance(self, Router) else self.add_url_rule
@@ -32,7 +37,7 @@ def push_to_app_fn(self: ROUTER, item: Routes):
     item.kwargs['methods'] = method
     add_url_rule(item.rule, endpoint, item.func, **item.kwargs)
 
-def push_to_app_res(self: ROUTER, item: ResourceRoute):
+def push_to_app_res(self: ROUTER, item: ResourceRoute): # type: ignore
     """Push resource class to app"""
     # pylint: disable-next=protected-access
     add_url_rule = self._add_url_rule if isinstance(self, Router) else self.add_url_rule
@@ -44,12 +49,13 @@ def push_to_app_res(self: ROUTER, item: ResourceRoute):
         is_blueprint = bool(self._blueprint)
     res_class = item.resource_class
     for view, (end, method) in RESOURCE_MAP.items():
+        name = item.alias or res_class.__name__
         if not is_blueprint:
-            endpoint = f"{res_class.__name__}.{view}"
+            endpoint = f"{name}.{view}"
         else:
-            endpoint = f"{res_class.__name__}__{view}"
+            endpoint = f"{name}__{view}"
         rule = f"{item.rule}{end}"
-        func = getattr(res_class, view)
+        func = getattr(res_class, view, _dummy_function)
         is_notimplemented: bool = getattr(func, '_notimplemented', False)
         if is_notimplemented:
             continue
@@ -200,7 +206,7 @@ class Router:
             return func
         return wrapper
 
-    def resource(self, rule: str, *args, **kwargs):
+    def resource(self, rule: str, alias: str = '', *args, **kwargs):
         """Provide resource route.
         To make resource route, a class with these methods must exists"""
         def wrapper(class_: ResourceT):
@@ -208,7 +214,7 @@ class Router:
                 raise NotResourcceClass(
                     f"class {class_.__name__} Does not have all required functions.")
             self._pending_resources.append(
-                ResourceRoute(class_, rule, args, kwargs))
+                ResourceRoute(class_, rule, alias, args, kwargs))
             return class_
         return wrapper
 
