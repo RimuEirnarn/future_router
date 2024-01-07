@@ -33,6 +33,20 @@ def root():
     return "Hello, World"
 ```
 
+## Installing
+
+(without git) Installing on main branch:
+
+```sh
+pip install https://github.com/RimuEirnarn/future_router/archive/main.tar.gz
+```
+
+(without git) Installing on specific tags:
+
+```sh
+pip install https://github.com/RimuEirnarn/future_router/archive/refs/tags/<version>.zip
+```
+
 ### Using `.resource`
 
 ```python
