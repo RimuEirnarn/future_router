@@ -5,3 +5,7 @@ def notimplemented(func):
     striped."""
     setattr(func, '_notimplemented', True)
     return func
+
+def static_notimplemented(func):
+    """Set route method as Not Implemented, by default not requiring @staticmethod"""
+    return notimplemented(staticmethod(func))
