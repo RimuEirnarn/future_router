@@ -8,4 +8,4 @@ def notimplemented(func):
 
 def static_notimplemented(func):
     """Set route method as Not Implemented, by default not requiring @staticmethod"""
-    return notimplemented(staticmethod(func))
+    return staticmethod(notimplemented(func))
