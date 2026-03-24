@@ -51,7 +51,7 @@ def push_to_app_res(self: ROUTER, item: ResourceRoute): # type: ignore
     for view, (end, method) in RESOURCE_MAP.items():
         name = item.alias or res_class.__name__
         if not is_blueprint:
-            endpoint = f"{name}.{view}"
+            endpoint = f"{name}_{view}"
         else:
             endpoint = f"{name}__{view}"
         rule = f"{item.rule}{end}"

@@ -10,5 +10,5 @@ from .router import Router
 from .resource_dummy import ResourceDummy
 from .funcs import *
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 __all__ = ['notimplemented', 'Router', 'ResourceDummy']
